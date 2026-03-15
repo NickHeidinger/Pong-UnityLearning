@@ -4,9 +4,20 @@ public class Ball : MonoBehaviour
 {
     public Rigidbody2D rb;
     public float initialSpeed = 6f;
+    public Transform player1Paddle;
 
     void Start()
     {
+        StartCoroutine(WaitForPlayer1Move());
+    }
+
+    private System.Collections.IEnumerator WaitForPlayer1Move()
+    {
+        float startY = player1Paddle.position.y;
+        while (Mathf.Approximately(player1Paddle.position.y, startY))
+        {
+            yield return null;
+        }
         LaunchBall();
     }
 
@@ -21,6 +32,6 @@ public class Ball : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        // (empty)
     }
 }

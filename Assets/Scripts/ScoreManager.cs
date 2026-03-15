@@ -20,11 +20,13 @@ public class ScoreManager : MonoBehaviour
     {
         player1Score++;
         player1ScoreText.text = player1Score.ToString();
+        Debug.Log($"Player 1 scored! Total: {player1Score}");
     }
 
     public void Player2Scores()
     {
         player2Score++;
         player2ScoreText.text = player2Score.ToString();
+        Debug.Log($"Player 2 scored! Total: {player2Score}");
     }
 }
