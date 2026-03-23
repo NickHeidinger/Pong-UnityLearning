@@ -4,10 +4,16 @@ public class Ball : MonoBehaviour
 {
     public Rigidbody2D rb;
     public float initialSpeed = 6f;
+    public float speedIncrement = 0.5f;
+    public float maxSpeed = 20f;
     public Transform player1Paddle;
+
+    private float currentSpeed;
+    private Vector2 lastVelocityDir;
 
     void Start()
     {
+        currentSpeed = initialSpeed;
         StartCoroutine(WaitForPlayer1Move());
     }
 
@@ -23,15 +29,28 @@ public class Ball : MonoBehaviour
 
     public void LaunchBall()
     {
+        currentSpeed = initialSpeed;
         bool isRight = UnityEngine.Random.value >= 0.5f;
         float xVelocity = isRight ? 1f : -1f;
         float yVelocity = UnityEngine.Random.Range(-1f, 1f);
-        rb.linearVelocity = new Vector2(xVelocity, yVelocity).normalized * initialSpeed;
+        rb.linearVelocity = new Vector2(xVelocity, yVelocity).normalized * currentSpeed;
+        lastVelocityDir = rb.linearVelocity.normalized;
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        // (empty)
+        if (rb.linearVelocity == Vector2.zero) return;
+
+        Vector2 currentDir = rb.linearVelocity.normalized;
+
+        // X direction flipped = ball bounced off a paddle or side wall
+        if (Mathf.Sign(currentDir.x) != Mathf.Sign(lastVelocityDir.x) ||
+            Mathf.Sign(currentDir.y) != Mathf.Sign(lastVelocityDir.y))
+        {
+            currentSpeed = Mathf.Min(currentSpeed + speedIncrement, maxSpeed);
+            rb.linearVelocity = currentDir * currentSpeed;
+        }
+
+        lastVelocityDir = currentDir;
     }
 }

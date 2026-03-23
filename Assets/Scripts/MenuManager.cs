@@ -1,25 +1,29 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
-    public GameObject menuPanel;
+    public GameObject MenuUI;
+    public GameObject startButton;
+    public GameObject restartButton;
+
     private bool isPlaying = false;
     private bool isPaused = false;
 
     void Start()
     {
-        menuPanel.SetActive(true);
-        Time.timeScale = 0f;
+        restartButton.SetActive(false);
+        startButton.SetActive(true);
+        ShowMenu();
     }
 
     void Update()
     {
         if (!isPlaying) return;
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
-            Debug.Log("Escape pressed. isPaused: " + isPaused);
             if (isPaused)
                 ResumeGame();
             else
@@ -29,32 +33,42 @@ public class MenuManager : MonoBehaviour
 
     public void StartGame()
     {
-        Debug.Log("StartGame called");
-        menuPanel.SetActive(false);
-        Time.timeScale = 1f;
         isPlaying = true;
         isPaused = false;
+        startButton.SetActive(false);
+        restartButton.SetActive(true);
+        MenuUI.SetActive(false);
+        Time.timeScale = 1f;
+    }
+
+    public void ResumeGame()
+    {
+        isPaused = false;
+        MenuUI.SetActive(false);
+        Time.timeScale = 1f;
+    }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void QuitGame()
     {
-
         Application.Quit();
     }
 
     private void PauseGame()
     {
-        Debug.Log("Game paused");
-        menuPanel.SetActive(true);
-        Time.timeScale = 0f;
         isPaused = true;
+        MenuUI.SetActive(true);
+        Time.timeScale = 0f;
     }
 
-    private void ResumeGame()
+    private void ShowMenu()
     {
-        Debug.Log("Game resumed");
-        menuPanel.SetActive(false);
-        Time.timeScale = 1f;
-        isPaused = false;
+        MenuUI.SetActive(true);
+        Time.timeScale = 0f;
     }
 }

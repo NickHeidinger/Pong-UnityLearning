@@ -14,11 +14,11 @@ public class Paddle1 : MonoBehaviour
         // Read input from the new Input System
         if (Keyboard.current.wKey.isPressed)
         {
-            move = 1f;
+            move = 2f;
         }
         else if (Keyboard.current.sKey.isPressed)
         {
-            move = -1f;
+            move = -2f;
         }
         else
         {
